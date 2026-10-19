@@ -18,6 +18,13 @@ data class DayTotal(val day: LocalDate, val expense: Long)
 
 data class AccountBalance(val account: Account, val balance: Long)
 
+/** Money moved into ([deposits]) and out of ([withdrawals]) savings accounts by transfers. Never income or expense. */
+data class SavingsFlow(val deposits: Long, val withdrawals: Long) {
+    val net: Long get() = deposits - withdrawals
+}
+
+data class MonthSavings(val month: YearMonth, val flow: SavingsFlow)
+
 /** Pure money math. Everything is recomputed from stored accounts and transactions; nothing is cached. */
 object Ledger {
 
@@ -109,4 +116,35 @@ object Ledger {
             DayTotal(day, perDay[day] ?: 0L)
         }
     }
+
+    /** Sum of balances of active savings accounts. */
+    fun savingsBalance(accounts: List<Account>, balances: Map<Long, Long>): Long =
+        accounts.filter { it.type == AccountType.SAVINGS && !it.isArchived }.sumOf { balances[it.id] ?: it.openingBalance }
+
+    /**
+     * Transfers from a non-savings account into a savings account are deposits, the reverse are withdrawals; moving money
+     * between two savings accounts is neither. Interest, spending straight from savings and opening balances only change
+     * the balance.
+     */
+    fun savingsFlow(transactions: List<Transaction>, accounts: List<Account>, range: MonthRange): SavingsFlow {
+        val savingsIds = accounts.filter { it.type == AccountType.SAVINGS }.map { it.id }.toSet()
+        if (savingsIds.isEmpty()) return SavingsFlow(0, 0)
+        var deposits = 0L
+        var withdrawals = 0L
+        for (tx in transactions) {
+            if (tx.type != TransactionType.TRANSFER || tx.dateTime !in range) continue
+            val toSavings = tx.toAccountId in savingsIds
+            val fromSavings = tx.fromAccountId in savingsIds
+            if (toSavings && !fromSavings) deposits += tx.amount
+            if (fromSavings && !toSavings) withdrawals += tx.amount
+        }
+        return SavingsFlow(deposits, withdrawals)
+    }
+
+    /** [count] consecutive months ending at [endMonth] (oldest first), zero-filled. */
+    fun savingsByMonth(transactions: List<Transaction>, accounts: List<Account>, endMonth: YearMonth, count: Int, zone: ZoneId): List<MonthSavings> =
+        (count - 1 downTo 0).map { back ->
+            val month = endMonth.minusMonths(back.toLong())
+            MonthSavings(month, savingsFlow(transactions, accounts, MonthRange.of(month, zone)))
+        }
 }

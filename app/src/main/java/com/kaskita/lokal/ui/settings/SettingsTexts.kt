@@ -38,6 +38,7 @@ fun accountTypeLabel(type: AccountType): String = when (type) {
     AccountType.CASH -> stringResource(R.string.acc_type_cash)
     AccountType.BANK -> stringResource(R.string.acc_type_bank)
     AccountType.EWALLET -> stringResource(R.string.acc_type_ewallet)
+    AccountType.SAVINGS -> stringResource(R.string.acc_type_savings)
     AccountType.OTHER -> stringResource(R.string.acc_type_other)
 }
 

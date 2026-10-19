@@ -2,7 +2,7 @@ package com.kaskita.lokal.domain
 
 enum class TransactionType { INCOME, EXPENSE, TRANSFER }
 
-enum class AccountType { CASH, BANK, EWALLET, OTHER }
+enum class AccountType { CASH, BANK, EWALLET, SAVINGS, OTHER }
 
 data class Account(
     val id: Long,

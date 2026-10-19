@@ -59,6 +59,7 @@ object RecapSnapshotFactory {
         AccountType.CASH -> "Uang tunai"
         AccountType.BANK -> "Rekening bank"
         AccountType.EWALLET -> "Dompet digital"
+        AccountType.SAVINGS -> "Tabungan"
         AccountType.OTHER -> "Akun lainnya"
     }
 }

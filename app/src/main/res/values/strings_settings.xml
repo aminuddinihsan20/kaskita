@@ -31,6 +31,7 @@
     <string name="acc_type_cash">Uang tunai</string>
     <string name="acc_type_bank">Rekening bank</string>
     <string name="acc_type_ewallet">E-wallet</string>
+    <string name="acc_type_savings">Tabungan</string>
     <string name="acc_type_other">Lainnya</string>
     <string name="acc_form_add">Tambah akun</string>
     <string name="acc_form_edit">Ubah akun</string>

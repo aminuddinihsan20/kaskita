@@ -116,6 +116,31 @@ class BackupRepositoryTest {
     }
 
     @Test
+    fun aSavingsAccountItsTypeAndItsDepositsSurviveBackupAndRestore() = runBlocking {
+        val bank = ledger.observeAccounts().first().first { it.type == AccountType.BANK }
+        ledger.saveAccount(bank.id, bank.name, bank.type, 3_000_000)
+        ledger.saveAccount(null, "Dana darurat", AccountType.SAVINGS, 250_000)
+        val savings = ledger.observeAccounts().first().first { it.type == AccountType.SAVINGS }
+        check(ledger.saveTransaction(draft(TransactionType.TRANSFER, 800_000, from = bank.id, to = savings.id)) is SaveResult.Success)
+        val json = BackupCodec.encode(backups.buildBackup())
+
+        val otherDb = newDb()
+        val otherLedger = RoomLedgerRepository(otherDb, FakeSettingsStore()) { 1_000L }
+        val otherBackups = BackupRepository(otherDb, FakeSettingsStore(), "1.0.0") { 2_000L }
+        val parsed = BackupCodec.decodeAndValidate(json) as BackupParseResult.Valid
+        assertTrue(otherBackups.restore(parsed.file, safetyDir) is RestoreResult.Success)
+
+        val accounts = otherLedger.observeAccounts().first()
+        val txs = otherLedger.observeTransactions().first()
+        assertEquals(AccountType.SAVINGS, accounts.first { it.name == "Dana darurat" }.type)
+        val balances = Ledger.balances(accounts, txs)
+        assertEquals(1_050_000L, Ledger.savingsBalance(accounts, balances))
+        assertEquals(2_200_000L, balances[bank.id])
+        assertEquals(3_250_000L, Ledger.totalBalance(accounts, balances))
+        otherDb.close()
+    }
+
+    @Test
     fun restoreReplacesNotMerges() = runBlocking {
         val emptyBackup = backups.buildBackup() // seeded accounts/categories, no transactions
         populate(ledger)

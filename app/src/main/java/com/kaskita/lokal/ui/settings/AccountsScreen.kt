@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Savings
+import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -74,7 +75,8 @@ private fun accountLook(type: AccountType): Triple<ImageVector, Color, Color> {
         AccountType.CASH -> Triple(Icons.Filled.Payments, s.tertiaryContainer, s.onTertiaryContainer)
         AccountType.BANK -> Triple(Icons.Filled.AccountBalance, s.primaryContainer, s.onPrimaryContainer)
         AccountType.EWALLET -> Triple(Icons.Filled.AccountBalanceWallet, s.secondaryContainer, s.onSecondaryContainer)
-        AccountType.OTHER -> Triple(Icons.Filled.Savings, MaterialTheme.finance.savingsContainer, MaterialTheme.finance.onSavingsContainer)
+        AccountType.SAVINGS -> Triple(Icons.Filled.Savings, MaterialTheme.finance.savingsContainer, MaterialTheme.finance.onSavingsContainer)
+        AccountType.OTHER -> Triple(Icons.Filled.Widgets, s.surfaceContainerHigh, s.onSurfaceVariant)
     }
 }
 

@@ -9,6 +9,7 @@ object TestData {
 
     const val BANK_ID = 1L
     const val CASH_ID = 2L
+    const val SAVINGS_ID = 3L
     const val FOOD_ID = 10L
     const val SALARY_ID = 20L
 
@@ -17,6 +18,9 @@ object TestData {
 
     fun cash(opening: Long = 0, archived: Boolean = false) =
         Account(CASH_ID, "Cash", AccountType.CASH, opening, 0, archived)
+
+    fun savings(opening: Long = 0, archived: Boolean = false) =
+        Account(SAVINGS_ID, "Tabungan", AccountType.SAVINGS, opening, 0, archived)
 
     fun foodCategory() = Category(FOOD_ID, "Makanan & minuman", TransactionType.EXPENSE, "food", "red", true, false)
     fun salaryCategory() = Category(SALARY_ID, "Gaji", TransactionType.INCOME, "work", "green", true, false)
