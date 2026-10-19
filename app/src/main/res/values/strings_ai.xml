@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Laporan: saran bulan depan (dihitung di perangkat, tanpa internet) -->
+    <string name="rp_advice_title">Saran bulan depan</string>
+    <string name="rp_advice_caption">Pedoman umum: sisihkan %1$d%% dari pemasukan, sisanya untuk pengeluaran.</string>
+    <string name="rp_advice_target">Target tabungan</string>
+    <string name="rp_advice_limit">Batas pengeluaran</string>
+    <string name="rp_advice_basis_average">Bulan ini belum ada pemasukan, jadi dasarnya rata-rata pemasukan bulan-bulan sebelumnya (%1$s).</string>
+    <string name="rp_advice_on_track">Bulan ini tersisa %1$s, sudah mencapai target. Sisihkan targetnya lebih dulu agar tidak terpakai.</string>
+    <string name="rp_advice_below">Bulan ini tersisa %1$s dari target %2$s. Kurangi pengeluaran sekitar %3$s agar sampai target.</string>
+    <string name="rp_advice_deficit">Pengeluaran melebihi pemasukan sebesar %1$s. Mulai dari target kecil dan kurangi pengeluaran sekitar %2$s.</string>
+    <string name="rp_advice_pending_ok">Pemasukan bulan ini belum tercatat. Pengeluaran sejauh ini %1$s, masih di bawah batas.</string>
+    <string name="rp_advice_pending_over">Pemasukan bulan ini belum tercatat. Pengeluaran sejauh ini %1$s sudah melewati batas sebesar %2$s.</string>
+    <string name="rp_advice_none">Saran belum bisa dihitung karena belum ada pemasukan tercatat.</string>
+    <string name="rp_advice_disclaimer">Pedoman sederhana, bukan nasihat keuangan profesional.</string>
+
+    <!-- Laporan: analisis Gemini -->
+    <string name="ai_title">Analisis AI (Gemini)</string>
+    <string name="ai_subtitle">Ringkasan dan saran untuk %1$s</string>
+    <string name="ai_not_ready_body">Dapatkan ringkasan dan saran dari Gemini. Hanya angka ringkasan yang dikirim, tanpa catatan dan nama akun.</string>
+    <string name="ai_setup">Siapkan analisis AI</string>
+    <string name="ai_analyze">Analisis dengan Gemini</string>
+    <string name="ai_reanalyze">Analisis ulang</string>
+    <string name="ai_retry">Coba lagi</string>
+    <string name="ai_change_settings">Ubah pengaturan AI</string>
+    <string name="ai_preview_link">Lihat data yang dikirim</string>
+    <string name="ai_preview_title">Data yang dikirim ke Gemini</string>
+    <string name="ai_preview_intro">Teks ini dikirim saat kamu menekan Analisis, bersama petunjuk tetap tentang cara menjawab. Catatan transaksi dan nama akun tidak ikut.</string>
+    <string name="ai_close">Tutup</string>
+    <string name="ai_loading">Gemini sedang menganalisis…</string>
+    <string name="ai_model_label">Model: %1$s</string>
+    <string name="ai_done_footer">Dibuat oleh AI dari ringkasan angka. Periksa lagi sebelum mengambil keputusan.</string>
+    <string name="ai_err_denied">Layanan menolak permintaan ini. Pastikan AI Logic dan App Check sudah diatur di Firebase, lalu coba lagi.</string>
+    <string name="appcheck_show">Lihat kode pendaftaran</string>
+    <string name="appcheck_title">Kode pendaftaran perangkat</string>
+    <string name="appcheck_body">Firebase harus mengenal HP ini sebelum AI bisa dipakai. Salin kode di bawah, lalu daftarkan di Firebase console: App Check → Apps → ⋮ pada aplikasi → Manage debug tokens → Add debug token. Boleh lewat browser di HP ini.</string>
+    <string name="appcheck_secret">Kode ini rahasia. Jangan dibagikan ke orang lain.</string>
+    <string name="appcheck_missing">Kode belum tersedia. Tutup aplikasi sepenuhnya, buka lagi, lalu coba ulang.</string>
+    <string name="appcheck_copy">Salin</string>
+    <string name="appcheck_copied">Tersalin</string>
+    <string name="ai_err_model">Model tidak ditemukan. Ubah nama model di pengaturan AI.</string>
+    <string name="ai_err_rate">Batas pemakaian Gemini tercapai. Coba lagi beberapa menit lagi.</string>
+    <string name="ai_err_server">Layanan Gemini sedang bermasalah. Coba lagi nanti.</string>
+    <string name="ai_err_timeout">Gemini terlalu lama menjawab. Coba lagi.</string>
+    <string name="ai_err_network">Tidak bisa terhubung ke internet. Periksa koneksi lalu coba lagi.</string>
+    <string name="ai_err_blocked">Gemini menolak membuat analisis untuk data ini.</string>
+    <string name="ai_err_incomplete">Gemini tidak memberi jawaban lengkap. Coba lagi.</string>
+    <string name="ai_err_unknown">Terjadi kesalahan yang tidak terduga. Coba lagi.</string>
+
+    <!-- Dialog pengaturan AI -->
+    <string name="ai_setup_title">Analisis AI dengan Gemini</string>
+    <string name="ai_setup_intro">Fitur opsional. Aplikasi mengirim ringkasan angka bulanan ke Google Gemini, hanya saat kamu menekan Analisis.</string>
+    <string name="ai_setup_via">Dikirim lewat Firebase AI Logic (project Firebase pembuat aplikasi) ke Google Gemini. Tidak ada kunci API yang perlu kamu buat.</string>
+    <string name="ai_setup_sent">Dikirim: total pemasukan dan pengeluaran, total per kategori, tren bulanan, dan saldo per jenis akun.</string>
+    <string name="ai_setup_not_sent">Tidak dikirim: catatan transaksi, nama akun, dan transaksi satu per satu.</string>
+    <string name="ai_setup_model_label">Nama model</string>
+    <string name="ai_setup_model_help">Kosongkan untuk memakai %1$s.</string>
+    <string name="ai_setup_consent">Saya mengerti dan setuju ringkasan angka dikirim ke Google Gemini saat saya menekan Analisis.</string>
+    <string name="ai_setup_save">Simpan</string>
+    <string name="ai_setup_cancel">Batal</string>
+    <string name="ai_setup_withdraw">Matikan analisis AI</string>
+    <string name="ai_setup_err_consent">Centang persetujuan untuk mengaktifkan analisis AI.</string>
+    <string name="ai_setup_err_model">Nama model tidak valid.</string>
+
+    <!-- Pengaturan -->
+    <string name="settings_section_ai">Analisis AI</string>
+    <string name="settings_ai">Analisis rekap dengan Gemini</string>
+    <string name="settings_ai_off">Belum aktif</string>
+    <string name="settings_ai_on">Aktif · model %1$s</string>
+</resources>

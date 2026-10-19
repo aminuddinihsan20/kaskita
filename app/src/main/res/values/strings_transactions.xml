@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tx_title">Transaksi</string>
+    <string name="tx_search_hint">Cari catatan</string>
+    <string name="tx_search_clear">Hapus pencarian</string>
+    <string name="tx_filter_account">Akun</string>
+    <string name="tx_filter_account_all">Semua akun</string>
+    <string name="tx_filter_category">Kategori</string>
+    <string name="tx_filter_category_all">Semua kategori</string>
+    <string name="tx_clear_filters">Hapus filter</string>
+
+    <string name="tx_summary_title">Ringkasan hasil</string>
+    <string name="tx_summary_income">Pemasukan</string>
+    <string name="tx_summary_expense">Pengeluaran</string>
+    <string name="tx_summary_transfer">Transfer (tidak dihitung)</string>
+    <string name="tx_summary_net">Selisih masuk − keluar</string>
+
+    <string name="tx_today">Hari ini</string>
+    <string name="tx_yesterday">Kemarin</string>
+
+    <string name="tx_empty">Belum ada transaksi pada periode ini.</string>
+    <string name="tx_empty_filtered">Tidak ada transaksi yang cocok dengan filter ini.</string>
+    <string name="tx_empty_action">Catat transaksi pertama</string>
+    <string name="tx_fab">Catat transaksi</string>
+
+    <string name="month_previous">Bulan sebelumnya</string>
+    <string name="month_next">Bulan berikutnya</string>
+
+    <string name="add_sheet_title">Catat transaksi</string>
+    <string name="add_income">+ Pemasukan</string>
+    <string name="add_expense">− Pengeluaran</string>
+    <string name="add_transfer">⇄ Transfer / Tarik ke Cash</string>
+
+    <string name="tx_detail_title">Detail transaksi</string>
+    <string name="tx_detail_category">Kategori</string>
+    <string name="tx_detail_account">Akun</string>
+    <string name="tx_detail_from">Dari akun</string>
+    <string name="tx_detail_to">Ke akun</string>
+    <string name="tx_detail_date">Tanggal</string>
+    <string name="tx_detail_note">Catatan</string>
+    <string name="tx_detail_no_note">Tidak ada catatan</string>
+    <string name="tx_detail_transfer_hint">Transfer tidak dihitung sebagai pemasukan atau pengeluaran.</string>
+    <string name="tx_delete_title">Hapus transaksi?</string>
+    <string name="tx_delete_message">Transaksi ini akan dihapus dan saldo akun dihitung ulang. Tindakan ini tidak bisa dibatalkan.</string>
+    <string name="tx_delete_blocked_title">Tidak bisa dihapus</string>
+    <string name="tx_delete_blocked_ok">Mengerti</string>
+    <string name="tx_deleted">Transaksi dihapus.</string>
+    <string name="tx_unknown_account">Akun tidak dikenal</string>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rp_title">Laporan</string>
+    <string name="rp_year_label">Tahun %1$d</string>
+    <string name="rp_prev_year">Tahun sebelumnya</string>
+    <string name="rp_next_year">Tahun berikutnya</string>
+
+    <string name="rp_flow_title">Arus kas %1$s</string>
+    <string name="rp_income">Pemasukan</string>
+    <string name="rp_expense">Pengeluaran</string>
+    <string name="rp_net">Selisih (masuk − keluar)</string>
+    <string name="rp_transfer_note">Transfer antar-akun %1$s tidak dihitung sebagai pemasukan atau pengeluaran.</string>
+
+    <string name="rp_accounts_title">Saldo akun saat ini</string>
+    <string name="rp_accounts_caption">Posisi saat ini (seluruh waktu), terpisah dari arus kas bulan di atas.</string>
+
+    <string name="rp_yearly_title">Pemasukan vs Pengeluaran per bulan</string>
+    <string name="rp_yearly_period">Tahun %1$d · dalam Rupiah</string>
+    <string name="rp_yearly_empty">Belum ada pemasukan atau pengeluaran pada tahun %1$d.</string>
+
+    <string name="rp_category_title">Pengeluaran per kategori</string>
+    <string name="rp_category_period">%1$s · dalam Rupiah</string>
+    <string name="rp_category_empty">Belum ada pengeluaran pada %1$s.</string>
+    <string name="rp_category_total">Total</string>
+    <string name="rp_category_row">%1$d transaksi · %2$d%%</string>
+    <string name="rp_category_hint">Ketuk satu kategori untuk melihat transaksinya.</string>
+    <string name="rp_category_selected">%1$s: %2$s dari %3$d transaksi</string>
+    <string name="rp_category_description">Grafik donat pengeluaran per kategori. %1$s</string>
+    <string name="rp_category_description_item">%1$s: %2$s, %3$d transaksi, %4$d%%.</string>
+    <string name="rp_uncategorized">Tanpa kategori</string>
+
+    <string name="rp_daily_title">Pengeluaran per hari</string>
+    <string name="rp_daily_period">%1$s · dalam Rupiah</string>
+    <string name="rp_daily_empty">Belum ada pengeluaran pada %1$s.</string>
+    <string name="rp_daily_description">Grafik batang pengeluaran harian. %1$s</string>
+    <string name="rp_daily_description_item">Tanggal %1$d: %2$s.</string>
+</resources>

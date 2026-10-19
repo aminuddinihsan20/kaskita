@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="amount_rejected_hint">Isi angka saja, tanpa koma, huruf, atau tanda minus (maksimal 13 angka). Isian sebelumnya dipertahankan.</string>
+    <string name="err_amount_required">Isi nominal lebih besar dari nol, misalnya 50.000.</string>
+    <string name="err_amount_too_large">Nominal terlalu besar. Maksimal Rp1.000.000.000.000.</string>
+    <string name="err_category_required">Pilih satu kategori.</string>
+    <string name="err_category_mismatch">Kategori tidak cocok dengan jenis transaksi. Pilih kategori lain.</string>
+    <string name="err_category_unavailable">Kategori ini sudah diarsipkan. Pilih kategori lain.</string>
+    <string name="err_source_required">Pilih akun sumber.</string>
+    <string name="err_source_required_expense">Pilih akun yang membayar.</string>
+    <string name="err_destination_required">Pilih akun tujuan.</string>
+    <string name="err_same_account">Akun sumber dan tujuan harus berbeda. Pilih salah satu akun lain.</string>
+    <string name="err_account_unavailable">Akun ini tidak tersedia (diarsipkan atau dihapus). Pilih akun lain.</string>
+    <string name="err_insufficient_balance">Saldo %1$s kurang %2$s. Kurangi nominal atau tambah saldo akun ini lebih dulu.</string>
+    <string name="err_archived_not_zero">Akun %1$s sudah diarsipkan dan harus tetap Rp0, tetapi perubahan ini membuat saldonya %2$s. Aktifkan kembali akunnya di Kelola akun lebih dulu.</string>
+    <string name="err_delete_archived">Transaksi ini tidak bisa dihapus: akun %1$s sudah diarsipkan dan harus tetap Rp0 (akan menjadi %2$s). Aktifkan kembali akunnya di Kelola akun lebih dulu.</string>
+    <string name="err_delete_failed">Transaksi gagal dihapus dan datanya tidak berubah. Coba lagi.</string>
+    <string name="err_delete_would_overdraw">Transaksi ini tidak bisa dihapus: saldo %1$s akan kurang %2$s. Hapus atau ubah transaksi yang memakainya lebih dulu.</string>
+</resources>

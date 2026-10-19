@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="form_title_income">Catat pemasukan</string>
+    <string name="form_title_expense">Catat pengeluaran</string>
+    <string name="form_title_transfer">Pindah uang antar-akun</string>
+    <string name="form_title_edit">Edit transaksi</string>
+
+    <string name="form_amount_label">Nominal</string>
+    <string name="form_category_label">Kategori</string>
+    <string name="form_date_label">Tanggal</string>
+    <string name="form_note_label">Catatan (opsional)</string>
+
+    <string name="form_account_income">Uang masuk ke akun</string>
+    <string name="form_account_expense">Dibayar dari</string>
+    <string name="form_transfer_from">Dari akun</string>
+    <string name="form_transfer_to">Ke akun</string>
+
+    <string name="form_save_income">Simpan pemasukan</string>
+    <string name="form_save_expense">Simpan pengeluaran</string>
+    <string name="form_save_transfer">Simpan transfer</string>
+    <string name="form_save_edit">Simpan perubahan</string>
+    <string name="form_saving">Menyimpan…</string>
+
+    <string name="form_transfer_hint">Transfer tidak dihitung sebagai pemasukan atau pengeluaran.</string>
+    <string name="form_transfer_preview_title">Dampak ke saldo</string>
+    <string name="form_transfer_preview_from">%1$s − %2$s</string>
+    <string name="form_transfer_preview_to">%1$s + %2$s</string>
+
+    <string name="form_saved_plain">Tersimpan.</string>
+    <string name="form_saved_one">Tersimpan. Saldo %1$s sekarang %2$s.</string>
+    <string name="form_saved_two">Tersimpan. Saldo %1$s %2$s, saldo %3$s %4$s.</string>
+    <string name="form_save_failed">Gagal menyimpan. Isian Anda masih ada, coba simpan lagi.</string>
+    <string name="form_not_found">Transaksi tidak ditemukan. Mungkin sudah dihapus.</string>
+    <string name="form_no_accounts">Belum ada akun aktif. Tambahkan akun di Pengaturan › Kelola akun.</string>
+    <string name="form_no_categories">Belum ada kategori. Tambahkan di Pengaturan › Kelola kategori.</string>
+    <string name="form_date_pick">Pilih</string>
+</resources>

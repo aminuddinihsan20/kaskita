@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">Ringkasan keuangan</string>
+    <string name="home_open_settings">Buka pengaturan</string>
+
+    <string name="home_total_label">Total saldo</string>
+    <string name="home_total_caption">Semua akun aktif, seluruh waktu</string>
+
+    <string name="home_cash_caption">Uang tunai</string>
+    <string name="home_withdraw">Tarik ke Cash</string>
+    <string name="home_history">Lihat riwayat</string>
+
+    <string name="home_income_named">Pemasukan %1$s</string>
+    <string name="home_expense_named">Pengeluaran %1$s</string>
+
+    <string name="home_chart_title">Pemasukan vs Pengeluaran</string>
+    <string name="home_chart_period">6 bulan terakhir, %1$s – %2$s · dalam Rupiah</string>
+    <string name="home_chart_empty">Belum ada pemasukan atau pengeluaran pada 6 bulan ini.</string>
+
+    <string name="home_recent_title">Transaksi terakhir</string>
+    <string name="home_recent_all">Semua</string>
+    <string name="home_recent_empty">Belum ada transaksi.</string>
+
+    <string name="chart_legend_income">Pemasukan (batang kiri)</string>
+    <string name="chart_legend_expense">Pengeluaran (batang kanan)</string>
+    <string name="chart_description">Grafik batang pemasukan dan pengeluaran per bulan. %1$s</string>
+    <string name="chart_description_month">%1$s: pemasukan %2$s, pengeluaran %3$s.</string>
+</resources>
