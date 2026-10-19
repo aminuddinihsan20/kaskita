@@ -66,6 +66,7 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     zone: ZoneId,
     onAdd: (TransactionType) -> Unit,
+    onSave: () -> Unit,
     onOpenTransaction: (Long) -> Unit,
     onAllTransactions: () -> Unit,
     onCashHistory: (accountId: Long) -> Unit,
@@ -96,7 +97,7 @@ fun HomeScreen(
             item { MonthSelector(state.month, viewModel::onPreviousMonth, viewModel::onNextMonth) }
             item { HeroTotal(state.totalBalance) }
             item { Bento(state, onWithdraw = { onAdd(TransactionType.TRANSFER) }, onCashHistory = onCashHistory) }
-            item { QuickActions(onAdd) }
+            item { QuickActions(onAdd, onSave) }
             item { MiniChartCard(state) }
             item {
                 Row(Modifier.fillMaxWidth().padding(start = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -235,7 +236,7 @@ private fun FlowTile(
 }
 
 @Composable
-private fun QuickActions(onAdd: (TransactionType) -> Unit) {
+private fun QuickActions(onAdd: (TransactionType) -> Unit, onSave: () -> Unit) {
     val colors = MaterialTheme.finance
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         ConnectedButtonGroup(
@@ -250,6 +251,13 @@ private fun QuickActions(onAdd: (TransactionType) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             container = colors.transferContainer,
             content = colors.onTransferContainer,
+        )
+        TonalButton(
+            text = stringResource(R.string.add_savings),
+            onClick = onSave,
+            modifier = Modifier.fillMaxWidth(),
+            container = colors.savingsContainer,
+            content = colors.onSavingsContainer,
         )
     }
 }

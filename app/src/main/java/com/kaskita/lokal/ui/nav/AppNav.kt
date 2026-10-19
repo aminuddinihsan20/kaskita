@@ -89,8 +89,9 @@ object Routes {
     const val DETAIL = "transaction/{id}"
     fun detail(id: Long) = "transaction/$id"
 
-    const val FORM = "form/{type}?id={id}"
-    fun form(type: TransactionType, editId: Long? = null) = "form/${type.name}" + (editId?.let { "?id=$it" } ?: "")
+    const val FORM = "form/{type}?id={id}&savings={savings}"
+    fun form(type: TransactionType, editId: Long? = null, savings: Boolean = false) =
+        "form/${type.name}?id=${editId ?: -1}&savings=$savings"
 }
 
 /**
@@ -164,6 +165,7 @@ fun AppNav(container: AppContainer) {
                     viewModel = vm,
                     zone = container.zone,
                     onAdd = { go(Routes.form(it)) },
+                    onSave = { go(Routes.form(TransactionType.TRANSFER, savings = true)) },
                     onOpenTransaction = { go(Routes.detail(it)) },
                     onAllTransactions = { goTopLevel(Routes.TRANSACTIONS) },
                     onCashHistory = { go(Routes.accountDetail(it)) },
@@ -177,6 +179,7 @@ fun AppNav(container: AppContainer) {
                     zone = container.zone,
                     onOpen = { go(Routes.detail(it)) },
                     onAdd = { go(Routes.form(it)) },
+                    onSave = { go(Routes.form(TransactionType.TRANSFER, savings = true)) },
                 )
             }
             composable(Routes.REPORTS) {
@@ -245,11 +248,13 @@ fun AppNav(container: AppContainer) {
                 arguments = listOf(
                     navArgument("type") { type = NavType.StringType },
                     navArgument("id") { type = NavType.LongType; defaultValue = -1L },
+                    navArgument("savings") { type = NavType.BoolType; defaultValue = false },
                 ),
             ) { entry ->
                 val type = TransactionType.valueOf(requireNotNull(entry.arguments?.getString("type")))
                 val editId = entry.arguments?.getLong("id")?.takeIf { it >= 0 }
-                val vm: TransactionFormViewModel = viewModel(factory = TransactionFormViewModel.factory(container, type, editId))
+                val savings = entry.arguments?.getBoolean("savings") ?: false
+                val vm: TransactionFormViewModel = viewModel(factory = TransactionFormViewModel.factory(container, type, editId, savings))
                 TransactionFormScreen(
                     viewModel = vm,
                     isEditing = editId != null,

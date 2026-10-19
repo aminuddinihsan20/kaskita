@@ -3,6 +3,8 @@
     <string name="form_title_income">Catat pemasukan</string>
     <string name="form_title_expense">Catat pengeluaran</string>
     <string name="form_title_transfer">Pindah uang antar-akun</string>
+    <string name="form_title_deposit">Nabung</string>
+    <string name="form_title_withdraw">Tarik dari tabungan</string>
     <string name="form_title_edit">Edit transaksi</string>
 
     <string name="form_amount_label">Nominal</string>
@@ -12,8 +14,12 @@
 
     <string name="form_account_income">Uang masuk ke akun</string>
     <string name="form_account_expense">Dibayar dari</string>
-    <string name="form_transfer_from">Dari akun</string>
-    <string name="form_transfer_to">Ke akun</string>
+    <string name="form_transfer_from">Uang diambil dari</string>
+    <string name="form_transfer_explain">Memindahkan uangmu sendiri dari satu tempat ke tempat lain, misalnya tarik tunai dari bank ke Cash. Ini bukan pemasukan dan bukan pengeluaran.</string>
+    <string name="form_transfer_explain_deposit">Memindahkan uang ke tabungan. Ini bukan pengeluaran: uangnya tetap milikmu.</string>
+    <string name="form_transfer_explain_withdraw">Mengambil uang dari tabungan. Ini bukan pemasukan: uangnya sudah milikmu.</string>
+    <string name="form_transfer_swap">Tukar arah</string>
+    <string name="form_transfer_to">Dipindah ke</string>
 
     <string name="form_save_income">Simpan pemasukan</string>
     <string name="form_save_expense">Simpan pengeluaran</string>
@@ -21,10 +27,10 @@
     <string name="form_save_edit">Simpan perubahan</string>
     <string name="form_saving">Menyimpan…</string>
 
-    <string name="form_transfer_hint">Transfer tidak dihitung sebagai pemasukan atau pengeluaran.</string>
     <string name="form_transfer_preview_title">Dampak ke saldo</string>
-    <string name="form_transfer_preview_from">%1$s − %2$s</string>
-    <string name="form_transfer_preview_to">%1$s + %2$s</string>
+    <string name="form_preview_empty">Isi nominal dan akun untuk melihat saldo sebelum dan sesudah.</string>
+    <string name="form_preview_change">%1$s → %2$s</string>
+    <string name="form_no_savings_hint">Belum ada akun Tabungan. Buat dulu di Pengaturan → Kelola akun, lalu pilih jenis Tabungan.</string>
 
     <string name="form_saved_plain">Tersimpan.</string>
     <string name="form_saved_one">Tersimpan. Saldo %1$s sekarang %2$s.</string>

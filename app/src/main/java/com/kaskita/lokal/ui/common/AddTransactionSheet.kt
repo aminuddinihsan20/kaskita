@@ -20,7 +20,7 @@ import com.kaskita.lokal.ui.theme.finance
 /** The "Catat transaksi" chooser: Pemasukan, Pengeluaran, or Transfer / Tarik ke Cash. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTransactionSheet(onPick: (TransactionType) -> Unit, onDismiss: () -> Unit) {
+fun AddTransactionSheet(onPick: (TransactionType) -> Unit, onSavings: () -> Unit, onDismiss: () -> Unit) {
     val colors = MaterialTheme.finance
     ModalBottomSheet(onDismissRequest = onDismiss, shape = MaterialTheme.shapes.extraLarge) {
         Column(
@@ -31,6 +31,7 @@ fun AddTransactionSheet(onPick: (TransactionType) -> Unit, onDismiss: () -> Unit
             TonalButton(stringResource(R.string.add_income), { onPick(TransactionType.INCOME) }, Modifier.fillMaxWidth(), container = colors.incomeContainer, content = colors.onIncomeContainer)
             TonalButton(stringResource(R.string.add_expense), { onPick(TransactionType.EXPENSE) }, Modifier.fillMaxWidth(), container = colors.expenseContainer, content = colors.onExpenseContainer)
             TonalButton(stringResource(R.string.add_transfer), { onPick(TransactionType.TRANSFER) }, Modifier.fillMaxWidth(), container = colors.transferContainer, content = colors.onTransferContainer)
+            TonalButton(stringResource(R.string.add_savings), onSavings, Modifier.fillMaxWidth(), container = colors.savingsContainer, content = colors.onSavingsContainer)
         }
     }
 }

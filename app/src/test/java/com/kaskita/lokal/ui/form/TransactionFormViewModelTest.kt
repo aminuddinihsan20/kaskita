@@ -225,11 +225,17 @@ class TransactionFormViewModelTest {
     fun transferPreviewReflectsAmountAndAccounts() = runTest {
         val vm = vm(repo(), TransactionType.TRANSFER)
         advanceUntilIdle()
-        assertNull(vm.state.value.transferPreview) // no amount yet
+        assertTrue(vm.state.value.balanceChanges.isEmpty()) // no amount yet
         vm.onAmountChange("500.000")
-        assertEquals(TransferPreview("Rekening Bank", "Cash", 500_000), vm.state.value.transferPreview)
+        assertEquals(
+            listOf(Triple(BANK_ID, 2_000_000L, 1_500_000L), Triple(CASH_ID, 500_000L, 1_000_000L)),
+            vm.state.value.balanceChanges.map { Triple(it.account.id, it.before, it.after) },
+        )
         vm.onFromAccount(CASH_ID) // Cash was the destination, so the destination flips to the old source
-        assertEquals(TransferPreview("Cash", "Rekening Bank", 500_000), vm.state.value.transferPreview)
+        assertEquals(
+            listOf(Triple(CASH_ID, 500_000L, 0L), Triple(BANK_ID, 2_000_000L, 2_500_000L)),
+            vm.state.value.balanceChanges.map { Triple(it.account.id, it.before, it.after) },
+        )
     }
 
     @Test

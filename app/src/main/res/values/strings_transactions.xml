@@ -29,6 +29,7 @@
     <string name="add_sheet_title">Catat transaksi</string>
     <string name="add_income">+ Pemasukan</string>
     <string name="add_expense">− Pengeluaran</string>
+    <string name="add_savings">Nabung / Tarik tabungan</string>
     <string name="add_transfer">⇄ Transfer / Tarik ke Cash</string>
 
     <string name="tx_detail_title">Detail transaksi</string>

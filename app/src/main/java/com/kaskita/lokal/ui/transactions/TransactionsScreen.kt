@@ -71,6 +71,7 @@ fun TransactionsScreen(
     zone: ZoneId,
     onOpen: (Long) -> Unit,
     onAdd: (TransactionType) -> Unit,
+    onSave: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showSheet by remember { mutableStateOf(false) }
@@ -151,7 +152,7 @@ fun TransactionsScreen(
     }
 
     if (showSheet) {
-        AddTransactionSheet(onPick = { showSheet = false; onAdd(it) }, onDismiss = { showSheet = false })
+        AddTransactionSheet(onPick = { showSheet = false; onAdd(it) }, onSavings = { showSheet = false; onSave() }, onDismiss = { showSheet = false })
     }
 }
 

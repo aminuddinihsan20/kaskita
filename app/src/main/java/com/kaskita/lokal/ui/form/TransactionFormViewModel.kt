@@ -10,6 +10,8 @@ import com.kaskita.lokal.domain.Account
 import com.kaskita.lokal.domain.AccountBalance
 import com.kaskita.lokal.domain.AccountType
 import com.kaskita.lokal.domain.AmountParser
+import com.kaskita.lokal.domain.BalanceChange
+import com.kaskita.lokal.domain.BalancePreview
 import com.kaskita.lokal.domain.Category
 import com.kaskita.lokal.domain.Ledger
 import com.kaskita.lokal.domain.Transaction
@@ -27,8 +29,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/** What a transfer will do to each side, rendered as `Rekening − Rp500.000` / `Cash + Rp500.000`. */
-data class TransferPreview(val fromName: String, val toName: String, val amount: Long)
+/** What a transfer is, from the user's point of view: plain, a deposit into savings, or a withdrawal from savings. */
+enum class TransferKind { NORMAL, DEPOSIT, WITHDRAW }
 
 data class FormState(
     val type: TransactionType,
@@ -48,7 +50,15 @@ data class FormState(
     val accounts: List<Account> = emptyList(),
     /** Categories of the current [type] the user may pick. */
     val categories: List<Category> = emptyList(),
-    val transferPreview: TransferPreview? = null,
+    /** Before/after balance of every account the save would touch; empty until the amount and accounts are valid. */
+    val balanceChanges: List<BalanceChange> = emptyList(),
+    /** Each account's balance without the transaction being edited, shown on the account chips. */
+    val balances: Map<Long, Long> = emptyMap(),
+    val transferKind: TransferKind = TransferKind.NORMAL,
+    /** True when at least one active savings account exists (the "Nabung" shortcut needs one). */
+    val hasSavingsAccount: Boolean = false,
+    /** True when the form was opened from the "Nabung" shortcut. */
+    val savingsRequested: Boolean = false,
     /** Balances of the accounts touched by the save, shown in the confirmation message. */
     val savedBalances: List<AccountBalance> = emptyList(),
 )
@@ -60,10 +70,13 @@ class TransactionFormViewModel(
     private val repo: LedgerRepository,
     initialType: TransactionType,
     private val editId: Long?,
+    /** Opened from the "Nabung" shortcut: a transfer that starts with a savings account as the destination. */
+    private val savingsPreset: Boolean = false,
     private val now: () -> Long = System::currentTimeMillis,
 ) : ViewModel() {
 
     private var allAccounts: List<Account> = emptyList()
+    private var allTransactions: List<Transaction> = emptyList()
     private var allCategories: List<Category> = emptyList()
     private var original: Transaction? = null
 
@@ -77,8 +90,9 @@ class TransactionFormViewModel(
     private suspend fun load(initialType: TransactionType) {
         allAccounts = repo.observeAccounts().first()
         allCategories = repo.observeCategories().first()
+        allTransactions = repo.observeTransactions().first()
         if (editId != null) {
-            original = repo.observeTransactions().first().firstOrNull { it.id == editId }
+            original = allTransactions.firstOrNull { it.id == editId }
             if (original == null) {
                 _state.update { it.copy(isLoading = false, notFound = true) }
                 return
@@ -97,7 +111,7 @@ class TransactionFormViewModel(
                 isLoading = false,
             )
         } else {
-            val (from, to) = defaultAccounts(initialType, from = null, to = null)
+            val (from, to) = if (savingsPreset && initialType == TransactionType.TRANSFER) savingsDefaults() else defaultAccounts(initialType, from = null, to = null)
             FormState(type = initialType, fromAccountId = from, toAccountId = to, dateTime = _state.value.dateTime, isLoading = false)
         }
         _state.value = start.refreshed()
@@ -121,6 +135,11 @@ class TransactionFormViewModel(
     fun onFromAccount(id: Long?) = edit { s ->
         val swapTarget = s.type == TransactionType.TRANSFER && id != null && id == s.toAccountId
         s.copy(fromAccountId = id, toAccountId = if (swapTarget) s.fromAccountId else s.toAccountId)
+    }
+
+    /** Flips a transfer's direction (e.g. Bank → Cash becomes Cash → Bank). */
+    fun onSwapAccounts() = edit { s ->
+        if (s.type != TransactionType.TRANSFER) s else s.copy(fromAccountId = s.toAccountId, toAccountId = s.fromAccountId)
     }
 
     fun onToAccount(id: Long?) = edit { s ->
@@ -181,16 +200,31 @@ class TransactionFormViewModel(
         categories = allCategories.filter { c ->
             c.type == type && (!c.isArchived || c.id == original?.categoryId)
         },
-        transferPreview = buildPreview(),
+        balanceChanges = AmountParser.parse(amountText)?.let { amount ->
+            BalancePreview.of(allAccounts, allTransactions, type, amount, fromAccountId, toAccountId, original?.id)
+        }.orEmpty(),
+        balances = Ledger.balances(allAccounts, allTransactions.filterNot { it.id == original?.id }),
+        transferKind = transferKind(),
+        hasSavingsAccount = allAccounts.any { it.type == AccountType.SAVINGS && !it.isArchived },
+        savingsRequested = savingsPreset,
     )
 
-    private fun FormState.buildPreview(): TransferPreview? {
-        if (type != TransactionType.TRANSFER) return null
-        val amount = AmountParser.parse(amountText) ?: return null
-        val from = allAccounts.firstOrNull { it.id == fromAccountId } ?: return null
-        val to = allAccounts.firstOrNull { it.id == toAccountId } ?: return null
-        if (from.id == to.id) return null
-        return TransferPreview(from.name, to.name, amount)
+    private fun FormState.transferKind(): TransferKind {
+        if (type != TransactionType.TRANSFER) return TransferKind.NORMAL
+        fun savings(id: Long?) = allAccounts.firstOrNull { it.id == id }?.type == AccountType.SAVINGS
+        return when {
+            savings(toAccountId) && !savings(fromAccountId) -> TransferKind.DEPOSIT
+            savings(fromAccountId) && !savings(toAccountId) -> TransferKind.WITHDRAW
+            else -> TransferKind.NORMAL
+        }
+    }
+
+    /** Source = a non-savings account (Bank first), destination = the first active savings account; plain defaults if there is none. */
+    private fun savingsDefaults(): Pair<Long?, Long?> {
+        val usable = allAccounts.filter { !it.isArchived }
+        val savings = usable.firstOrNull { it.type == AccountType.SAVINGS } ?: return defaultAccounts(TransactionType.TRANSFER, null, null)
+        val source = usable.firstOrNull { it.type == AccountType.BANK } ?: usable.firstOrNull { it.type != AccountType.SAVINGS }
+        return source?.id to savings.id
     }
 
     /** Keeps what already fits [type]; fills the rest with Cash (income/expense) or Bank → Cash (transfer). */
@@ -219,8 +253,8 @@ class TransactionFormViewModel(
     }
 
     companion object {
-        fun factory(container: AppContainer, type: TransactionType, editId: Long?) = viewModelFactory {
-            initializer { TransactionFormViewModel(container.ledger, type, editId, container::now) }
+        fun factory(container: AppContainer, type: TransactionType, editId: Long?, savingsPreset: Boolean = false) = viewModelFactory {
+            initializer { TransactionFormViewModel(container.ledger, type, editId, savingsPreset, container::now) }
         }
     }
 }

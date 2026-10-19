@@ -20,6 +20,9 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.icons.filled.SwapVert
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -85,6 +88,8 @@ fun TransactionFormScreen(
         isEditing -> R.string.form_title_edit
         state.type == TransactionType.INCOME -> R.string.form_title_income
         state.type == TransactionType.EXPENSE -> R.string.form_title_expense
+        state.transferKind == TransferKind.DEPOSIT -> R.string.form_title_deposit
+        state.transferKind == TransferKind.WITHDRAW -> R.string.form_title_withdraw
         else -> R.string.form_title_transfer
     }
     val saveLabel = when {
@@ -176,19 +181,38 @@ private fun FormContent(state: FormState, viewModel: TransactionFormViewModel, z
                 errors = errorsFor(FormField.ACCOUNT), state = state,
             )
             TransactionType.TRANSFER -> {
+                Text(
+                    stringResource(
+                        when (state.transferKind) {
+                            TransferKind.DEPOSIT -> R.string.form_transfer_explain_deposit
+                            TransferKind.WITHDRAW -> R.string.form_transfer_explain_withdraw
+                            TransferKind.NORMAL -> R.string.form_transfer_explain
+                        },
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 4.dp),
+                )
                 AccountSection(
                     label = stringResource(R.string.form_transfer_from),
                     accounts = state.accounts, selectedId = state.fromAccountId, onSelect = viewModel::onFromAccount,
                     errors = errorsFor(FormField.ACCOUNT), state = state,
                 )
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    FilledTonalButton(onClick = viewModel::onSwapAccounts) {
+                        Icon(Icons.Filled.SwapVert, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+                        Text(stringResource(R.string.form_transfer_swap))
+                    }
+                }
                 AccountSection(
                     label = stringResource(R.string.form_transfer_to),
                     accounts = state.accounts, selectedId = state.toAccountId, onSelect = viewModel::onToAccount,
                     errors = emptyList(), state = state,
                 )
-                TransferPreviewCard(state.transferPreview)
+                if (state.savingsRequested && !state.hasSavingsAccount) NoSavingsHint()
             }
         }
+        BalancePreviewCard(state)
 
         SoftCard(padding = 16.dp) {
             DateField(state.dateTime, zone, viewModel::onDate)
@@ -241,7 +265,14 @@ private fun AccountSection(
                     FilterChip(
                         selected = account.id == selectedId,
                         onClick = { onSelect(account.id) },
-                        label = { Text(account.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                        label = {
+                            Column {
+                                Text(account.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                state.balances[account.id]?.let {
+                                    Text(RupiahFormatter.format(it), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                            }
+                        },
                         shape = MaterialTheme.shapes.large,
                     )
                 }
@@ -293,31 +324,42 @@ private fun CategoryCell(category: Category, selected: Boolean, onClick: () -> U
     }
 }
 
+/** Shown when the "Nabung" shortcut is used but no savings account exists, so it does not silently become a plain transfer. */
 @Composable
-private fun TransferPreviewCard(preview: TransferPreview?) {
+private fun NoSavingsHint() {
+    Text(
+        stringResource(R.string.form_no_savings_hint),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/** Balance of every account this save touches, before → after, so nothing is a surprise after tapping Simpan. */
+@Composable
+private fun BalancePreviewCard(state: FormState) {
     val colors = MaterialTheme.finance
-    SoftCard(containerColor = colors.transferContainer) {
-        Text(stringResource(R.string.form_transfer_preview_title), style = MaterialTheme.typography.titleSmall, color = colors.onTransferContainer)
-        if (preview != null) {
-            val amount = RupiahFormatter.format(preview.amount)
+    val isTransfer = state.type == TransactionType.TRANSFER
+    SoftCard(containerColor = if (isTransfer) colors.transferContainer else MaterialTheme.colorScheme.surfaceContainerLow) {
+        val content = if (isTransfer) colors.onTransferContainer else MaterialTheme.colorScheme.onSurface
+        Text(stringResource(R.string.form_transfer_preview_title), style = MaterialTheme.typography.titleSmall, color = content)
+        if (state.balanceChanges.isEmpty()) {
             Text(
-                stringResource(R.string.form_transfer_preview_from, preview.fromName, amount),
-                style = MaterialTheme.typography.bodyLarge,
-                color = colors.onTransferContainer,
+                stringResource(R.string.form_preview_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = content.copy(alpha = 0.85f),
                 modifier = Modifier.padding(top = 8.dp),
             )
-            Text(
-                stringResource(R.string.form_transfer_preview_to, preview.toName, amount),
-                style = MaterialTheme.typography.bodyLarge,
-                color = colors.onTransferContainer,
-            )
         }
-        Text(
-            stringResource(R.string.form_transfer_hint),
-            style = MaterialTheme.typography.bodySmall,
-            color = colors.onTransferContainer.copy(alpha = 0.85f),
-            modifier = Modifier.padding(top = 8.dp),
-        )
+        state.balanceChanges.forEach { change ->
+            Column(Modifier.padding(top = 8.dp)) {
+                Text(change.account.name, style = MaterialTheme.typography.bodyMedium, color = content)
+                Text(
+                    stringResource(R.string.form_preview_change, RupiahFormatter.format(change.before), RupiahFormatter.format(change.after)),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = content,
+                )
+            }
+        }
     }
 }
 
