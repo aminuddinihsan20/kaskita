@@ -123,6 +123,15 @@ class RecapPromptBuilderTest {
     }
 
     @Test
+    fun savingsAreStatedAsTransfersNotAsSpending() {
+        val s = recapSnapshot().copy(savings = SavingsSummary(deposits = 600_000, withdrawals = 100_000, balance = 1_500_000))
+        val text = build(s).user
+        assertTrue(text.contains("Tabungan bulan ini: setoran Rp600.000, penarikan Rp100.000, saldo tabungan saat ini Rp1.500.000"))
+        assertTrue(text.contains("bukan pemasukan atau pengeluaran"))
+        assertFalse(build(recapSnapshot()).user.contains("Tabungan bulan ini"))
+    }
+
+    @Test
     fun aPreviousMonthWithoutAnyRecordIsNotPresentedAsZeroRupiah() {
         val s = recapSnapshot().copy(previous = MonthFlow(YearMonth.of(2026, 9), 0, 0))
         assertFalse(build(s).user.contains("Bulan sebelumnya"))

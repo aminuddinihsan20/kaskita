@@ -70,6 +70,13 @@ internal fun AdviceCard(state: ReportsUiState) {
                 modifier = Modifier.padding(top = 8.dp),
             )
         }
+        state.savings?.let {
+            Text(
+                stringResource(R.string.rp_advice_saved, rp(it.monthFlow.net), rp(advice.savingsTarget)),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
         Text(
             stringResource(R.string.rp_advice_disclaimer),
             style = MaterialTheme.typography.bodySmall,
@@ -200,4 +207,34 @@ internal fun AiPreviewDialog(prompt: RecapPrompt.Ready, onDismiss: () -> Unit) {
         },
         confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.ai_close)) } },
     )
+}
+
+/** Saldo tabungan, plus what moved in and out this month and over the last six months. Savings are transfers, never expenses. */
+@Composable
+internal fun SavingsCard(state: ReportsUiState, monthText: String) {
+    val savings = state.savings ?: return
+    val colors = MaterialTheme.finance
+    SectionCard(stringResource(R.string.rp_savings_title), stringResource(R.string.rp_savings_period, monthText)) {
+        Line(stringResource(R.string.rp_savings_balance), savings.balance, rp(savings.balance), MaterialTheme.colorScheme.onSurface, emphasized = true)
+        if (savings.accounts.size > 1) {
+            savings.accounts.forEach { Line(it.name, it.balance, rp(it.balance), MaterialTheme.colorScheme.onSurfaceVariant) }
+        }
+        Line(stringResource(R.string.rp_savings_deposits), savings.monthFlow.deposits, "+" + rp(savings.monthFlow.deposits), colors.income)
+        Line(stringResource(R.string.rp_savings_withdrawals), savings.monthFlow.withdrawals, "−" + rp(savings.monthFlow.withdrawals), colors.expense)
+        Surface(Modifier.padding(top = 8.dp).fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = colors.savingsContainer) {
+            Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.rp_savings_net), style = MaterialTheme.typography.bodyMedium, color = colors.onSavingsContainer, modifier = Modifier.weight(1f))
+                Text(rp(savings.monthFlow.net), style = MaterialTheme.typography.titleMedium, color = colors.onSavingsContainer)
+            }
+        }
+        Text(stringResource(R.string.rp_savings_history), style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = 14.dp))
+        val active = savings.recent.filter { it.flow.deposits != 0L || it.flow.withdrawals != 0L }
+        if (active.isEmpty()) {
+            Text(stringResource(R.string.rp_savings_history_empty), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
+        }
+        active.forEach {
+            Line(com.kaskita.lokal.ui.common.formatMonthYearShort(it.month), it.flow.net, (if (it.flow.net >= 0) "+" else "") + rp(it.flow.net), MaterialTheme.colorScheme.onSurface)
+        }
+        Text(stringResource(R.string.rp_savings_note), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp))
+    }
 }

@@ -10,18 +10,23 @@ import com.kaskita.lokal.data.ai.DEFAULT_GEMINI_MODEL
 import com.kaskita.lokal.data.ai.GeminiClient
 import com.kaskita.lokal.data.ai.GeminiError
 import com.kaskita.lokal.data.ai.GeminiResult
+import com.kaskita.lokal.domain.Account
 import com.kaskita.lokal.domain.AccountBalance
+import com.kaskita.lokal.domain.AccountType
 import com.kaskita.lokal.domain.Category
 import com.kaskita.lokal.domain.DayTotal
 import com.kaskita.lokal.domain.Ledger
 import com.kaskita.lokal.domain.MonthRange
+import com.kaskita.lokal.domain.MonthSavings
 import com.kaskita.lokal.domain.MonthTotals
+import com.kaskita.lokal.domain.SavingsFlow
 import com.kaskita.lokal.domain.PeriodSummary
 import com.kaskita.lokal.domain.RecapAdvice
 import com.kaskita.lokal.domain.RecapAdvisor
 import com.kaskita.lokal.domain.RecapPrompt
 import com.kaskita.lokal.domain.RecapPromptBuilder
 import com.kaskita.lokal.domain.RecapSnapshotFactory
+import com.kaskita.lokal.domain.Transaction
 import com.kaskita.lokal.domain.TransactionType
 import com.kaskita.lokal.ui.AppContainer
 import com.kaskita.lokal.ui.transactions.TxRow
@@ -55,11 +60,24 @@ data class ReportsUiState(
     val drillDown: List<TxRow> = emptyList(),
     /** Next-month saving and spending guidance for [month]; null when there is no income to base it on. Needs no AI and no network. */
     val advice: RecapAdvice? = null,
+    val savings: SavingsUi? = null,
     /** Exactly what an analysis would send; [RecapPrompt.NoData] for an empty month. */
     val prompt: RecapPrompt = RecapPrompt.NoData,
     val ai: AiRecapState = AiRecapState.NotReady,
     val aiModel: String = DEFAULT_GEMINI_MODEL,
     val isLoading: Boolean = true,
+)
+
+data class SavingsAccountRow(val name: String, val balance: Long)
+
+/** The Tabungan card: only exists when the user has at least one savings account. */
+data class SavingsUi(
+    val balance: Long,
+    val accounts: List<SavingsAccountRow>,
+    /** Deposits and withdrawals (transfers) in the selected month. */
+    val monthFlow: SavingsFlow,
+    /** The last six months ending at the selected month, oldest first. */
+    val recent: List<MonthSavings>,
 )
 
 sealed interface AiRecapState {
@@ -134,8 +152,26 @@ class ReportsViewModel(
             accountBalances = accounts.filterNot { it.isArchived }.map { AccountBalance(it, balances[it.id] ?: it.openingBalance) },
             selectedCategoryId = effectiveSelection,
             drillDown = drillDown,
+            savings = savingsUi(accounts, transactions, balances, m, range),
             isLoading = false,
         ), RecapAdvisor.advise(snapshot), RecapPromptBuilder.build(snapshot))
+    }
+
+    private fun savingsUi(
+        accounts: List<Account>,
+        transactions: List<Transaction>,
+        balances: Map<Long, Long>,
+        month: YearMonth,
+        range: MonthRange,
+    ): SavingsUi? {
+        if (accounts.none { it.type == AccountType.SAVINGS }) return null
+        return SavingsUi(
+            balance = Ledger.savingsBalance(accounts, balances),
+            accounts = accounts.filter { it.type == AccountType.SAVINGS && !it.isArchived }
+                .map { SavingsAccountRow(it.name, balances[it.id] ?: it.openingBalance) },
+            monthFlow = Ledger.savingsFlow(transactions, accounts, range),
+            recent = Ledger.savingsByMonth(transactions, accounts, month, 6, zone),
+        )
     }
 
     private val config = combine(settings.aiConsent, settings.geminiModel, ::AiConfig)

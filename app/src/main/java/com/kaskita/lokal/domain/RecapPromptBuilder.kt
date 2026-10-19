@@ -30,6 +30,7 @@ object RecapPromptBuilder {
         Pengeluaran terbesar
         Saran pengeluaran bulan depan
         Saran menabung bulan depan
+        Bila ada data tabungan, bandingkan setoran bulan ini dengan Target tabungan; setoran bukan pengeluaran.
         Pada dua saran terakhir, pakai Target tabungan dan Batas pengeluaran dari pedoman apa adanya, jelaskan alasannya, dan beri satu atau dua langkah praktis.
         Maksimal sekitar 200 kata. Tutup dengan satu kalimat: "Ini analisis otomatis dari catatanmu, bukan nasihat keuangan profesional."
     """.trimIndent()
@@ -65,6 +66,9 @@ object RecapPromptBuilder {
                 appendLine("Saldo saat ini per jenis akun:")
                 s.accounts.forEach { appendLine("${it.typeLabel}: ${rp(it.balance)}") }
                 appendLine("Total saldo: ${rp(s.totalBalance)}")
+            }
+            s.savings?.let {
+                appendLine("Tabungan bulan ini: setoran ${rp(it.deposits)}, penarikan ${rp(it.withdrawals)}, saldo tabungan saat ini ${rp(it.balance)} (setoran dan penarikan adalah transfer, bukan pemasukan atau pengeluaran)")
             }
             append(adviceBlock(s, RecapAdvisor.advise(s)))
         }.trimEnd()

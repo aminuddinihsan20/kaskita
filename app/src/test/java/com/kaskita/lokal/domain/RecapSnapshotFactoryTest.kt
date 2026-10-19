@@ -88,6 +88,23 @@ class RecapSnapshotFactoryTest {
     }
 
     @Test
+    fun savingsAreSummarisedFromTransfersAndTheirOwnBalance() {
+        val tx = transactions + listOf(
+            transfer(20, 600_000, BANK_ID, TestData.SAVINGS_ID, millis(2026, 10, 6)),
+            transfer(21, 100_000, TestData.SAVINGS_ID, CASH_ID, millis(2026, 10, 7)),
+        )
+        val s = snapshot(accounts = listOf(bank(), cash(), TestData.savings(opening = 1_000_000)), tx = tx)
+        assertEquals(SavingsSummary(deposits = 600_000, withdrawals = 100_000, balance = 1_500_000), s.savings)
+        assertEquals("Tabungan", s.accounts.first { it.balance == 1_500_000L }.typeLabel)
+        assertEquals("transfers into savings are not spending", 400_000L, s.expense)
+    }
+
+    @Test
+    fun noSavingsAccountMeansNoSavingsSection() {
+        assertNull(snapshot().savings)
+    }
+
+    @Test
     fun archivedAccountsAreLeftOut() {
         val s = snapshot(accounts = listOf(bank(), cash(archived = true)))
         assertEquals(listOf("Rekening bank"), s.accounts.map { it.typeLabel })

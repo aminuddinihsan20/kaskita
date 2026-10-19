@@ -14,6 +14,19 @@
     <string name="rp_advice_none">Saran belum bisa dihitung karena belum ada pemasukan tercatat.</string>
     <string name="rp_advice_disclaimer">Pedoman sederhana, bukan nasihat keuangan profesional.</string>
 
+    <string name="rp_advice_saved">Masuk tabungan bulan ini: %1$s dari target %2$s.</string>
+
+    <!-- Laporan: tabungan -->
+    <string name="rp_savings_title">Tabungan</string>
+    <string name="rp_savings_period">Setoran dan penarikan %1$s</string>
+    <string name="rp_savings_balance">Saldo tabungan</string>
+    <string name="rp_savings_deposits">Setoran</string>
+    <string name="rp_savings_withdrawals">Penarikan</string>
+    <string name="rp_savings_net">Bersih ditabung</string>
+    <string name="rp_savings_note">Setoran dan penarikan adalah transfer, bukan pemasukan atau pengeluaran.</string>
+    <string name="rp_savings_history">6 bulan terakhir</string>
+    <string name="rp_savings_history_empty">Belum ada setoran atau penarikan dalam 6 bulan terakhir.</string>
+
     <!-- Laporan: analisis Gemini -->
     <string name="ai_title">Analisis AI (Gemini)</string>
     <string name="ai_subtitle">Ringkasan dan saran untuk %1$s</string>

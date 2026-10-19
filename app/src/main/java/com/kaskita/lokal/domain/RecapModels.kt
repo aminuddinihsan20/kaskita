@@ -13,6 +13,9 @@ data class MonthFlow(val month: YearMonth, val income: Long, val expense: Long)
 
 data class BusyDay(val date: LocalDate, val total: Long)
 
+/** Savings for the month: transfers into and out of savings accounts, and the savings balance now. */
+data class SavingsSummary(val deposits: Long, val withdrawals: Long, val balance: Long)
+
 /** Everything the recap analysis may look at. Aggregates only: no notes, account names or individual transactions. */
 data class RecapSnapshot(
     val month: YearMonth,
@@ -30,6 +33,8 @@ data class RecapSnapshot(
     val daysInMonth: Int,
     val accounts: List<AccountSummary>,
     val totalBalance: Long,
+    /** Null when the user has no savings account. */
+    val savings: SavingsSummary? = null,
 ) {
     /** Selisih arus kas (pemasukan − pengeluaran); not a balance. */
     val net: Long get() = income - expense

@@ -50,7 +50,14 @@ object RecapSnapshotFactory {
             daysInMonth = month.lengthOfMonth(),
             accounts = perType,
             totalBalance = Ledger.totalBalance(accounts, balances),
+            savings = savingsSummary(accounts, transactions, range, balances),
         )
+    }
+
+    private fun savingsSummary(accounts: List<Account>, transactions: List<Transaction>, range: MonthRange, balances: Map<Long, Long>): SavingsSummary? {
+        if (accounts.none { it.type == AccountType.SAVINGS }) return null
+        val flow = Ledger.savingsFlow(transactions, accounts, range)
+        return SavingsSummary(flow.deposits, flow.withdrawals, Ledger.savingsBalance(accounts, balances))
     }
 
     private fun percent(part: Long, whole: Long): Int = if (whole <= 0) 0 else ((part * 100 + whole / 2) / whole).toInt()

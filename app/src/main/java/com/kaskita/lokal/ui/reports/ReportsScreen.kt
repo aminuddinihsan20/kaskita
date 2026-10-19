@@ -82,6 +82,7 @@ fun ReportsScreen(viewModel: ReportsViewModel, aiSetup: AiSetupViewModel, zone: 
             item { MonthSelector(state.month, viewModel::onPreviousMonth, viewModel::onNextMonth) }
             item { YearSelector(state.month.year, viewModel::onPreviousYear, viewModel::onNextYear) }
             item { FlowCard(state, monthText) }
+            if (state.savings != null) item { SavingsCard(state, monthText) }
             if (state.prompt is RecapPrompt.Ready) {
                 item { AdviceCard(state) }
                 item {
