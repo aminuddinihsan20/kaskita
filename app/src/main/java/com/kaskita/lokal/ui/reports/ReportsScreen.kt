@@ -48,7 +48,6 @@ import com.kaskita.lokal.ui.common.SoftCard
 import com.kaskita.lokal.ui.common.TabScreen
 import com.kaskita.lokal.ui.common.formatMonthYear
 import com.kaskita.lokal.ui.settings.AiSetupDialog
-import com.kaskita.lokal.ui.settings.AppCheckCodeDialog
 import com.kaskita.lokal.ui.settings.AiSetupViewModel
 import com.kaskita.lokal.ui.reports.charts.DailyExpenseChart
 import com.kaskita.lokal.ui.reports.charts.ExpenseDonutChart
@@ -65,7 +64,6 @@ fun ReportsScreen(viewModel: ReportsViewModel, aiSetup: AiSetupViewModel, zone: 
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showSetup by remember { mutableStateOf(false) }
     var showPreview by remember { mutableStateOf(false) }
-    var showCode by remember { mutableStateOf(false) }
     val monthText = formatMonthYear(state.month)
 
     TabScreen(title = stringResource(R.string.rp_title)) { padding ->
@@ -94,7 +92,6 @@ fun ReportsScreen(viewModel: ReportsViewModel, aiSetup: AiSetupViewModel, zone: 
                         onAnalyze = { viewModel.onAnalyze() },
                         onAnalyzeAgain = { viewModel.onAnalyze(again = true) },
                         onPreview = { showPreview = true },
-                        onShowCode = { showCode = true },
                     )
                 }
             }
@@ -118,7 +115,6 @@ fun ReportsScreen(viewModel: ReportsViewModel, aiSetup: AiSetupViewModel, zone: 
     }
 
     if (showSetup) AiSetupDialog(aiSetup, onDismiss = { showSetup = false })
-    if (showCode) AppCheckCodeDialog(onDismiss = { showCode = false })
     (state.prompt as? RecapPrompt.Ready)?.let { prompt ->
         if (showPreview) AiPreviewDialog(prompt, onDismiss = { showPreview = false })
     }

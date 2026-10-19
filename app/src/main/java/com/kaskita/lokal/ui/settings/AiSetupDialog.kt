@@ -41,7 +41,6 @@ fun AiSetupDialog(viewModel: AiSetupViewModel, onDismiss: () -> Unit) {
     if (!state.loaded) return // the stored values are still being read; do not seed the form with placeholders
     var consent by remember { mutableStateOf(state.consent) }
     var modelInput by remember { mutableStateOf(state.model) }
-    var showCode by remember { mutableStateOf(false) }
 
     fun close() {
         viewModel.onDialogClosed()
@@ -90,7 +89,6 @@ fun AiSetupDialog(viewModel: AiSetupViewModel, onDismiss: () -> Unit) {
                         color = MaterialTheme.colorScheme.error,
                     )
                 }
-                TextButton(onClick = { showCode = true }) { Text(stringResource(R.string.appcheck_show)) }
                 if (state.consent) {
                     TextButton(onClick = { viewModel.onWithdrawConsent(); close() }, modifier = Modifier.padding(top = 2.dp)) {
                         Text(stringResource(R.string.ai_setup_withdraw))
@@ -101,5 +99,4 @@ fun AiSetupDialog(viewModel: AiSetupViewModel, onDismiss: () -> Unit) {
         confirmButton = { TextButton(onClick = { viewModel.onSave(consent, modelInput) }) { Text(stringResource(R.string.ai_setup_save)) } },
         dismissButton = { TextButton(onClick = ::close) { Text(stringResource(R.string.ai_setup_cancel)) } },
     )
-    if (showCode) AppCheckCodeDialog(onDismiss = { showCode = false })
 }

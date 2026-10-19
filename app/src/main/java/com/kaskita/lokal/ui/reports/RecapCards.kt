@@ -96,7 +96,6 @@ internal fun AiCard(
     onAnalyze: () -> Unit,
     onAnalyzeAgain: () -> Unit,
     onPreview: () -> Unit,
-    onShowCode: () -> Unit,
 ) {
     SectionCard(stringResource(R.string.ai_title), stringResource(R.string.ai_subtitle, monthText)) {
         when (val ai = state.ai) {
@@ -142,9 +141,8 @@ internal fun AiCard(
                     if (!needsSettings) {
                         PrimaryButton(stringResource(R.string.ai_retry), onAnalyze, Modifier.fillMaxWidth())
                     } else {
-                        // Denied by the service: retrying can help (e.g. after registering the App Check token); the model name may be wrong.
+                        // Denied by the service: a retry may help; a wrong model name is the only thing the user can change.
                         PrimaryButton(stringResource(R.string.ai_retry), onAnalyze, Modifier.fillMaxWidth())
-                        if (ai.error == GeminiError.DENIED) TonalButton(stringResource(R.string.appcheck_show), onShowCode, Modifier.fillMaxWidth())
                         if (ai.error == GeminiError.MODEL_NOT_FOUND) TonalButton(stringResource(R.string.ai_change_settings), onSetup, Modifier.fillMaxWidth())
                     }
                 }

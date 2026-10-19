@@ -6,10 +6,10 @@ import com.google.firebase.appcheck.AppCheckProviderFactory
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 
 /**
- * This app is for personal use and is never published, so every build (debug and release) uses the debug provider:
- * it prints a one-time token to Logcat (tag "DebugAppCheckProvider") that the owner registers in the Firebase console
- * (App Check → Apps → ⋮ → Manage debug tokens). Play Integrity would reject an APK that is not installed from Google
- * Play. If the app is ever published, switch this to `PlayIntegrityAppCheckProviderFactory`.
+ * This app is for personal use and is never published, so every build (debug and release) uses the debug provider with
+ * the owner's fixed token (see [seedAppCheckDebugToken]), registered once in the Firebase console. Play Integrity would
+ * reject an APK that is not installed from Google Play. If the app is ever published, switch this to
+ * `PlayIntegrityAppCheckProviderFactory`. The token is never shown in the UI.
  */
 internal fun appCheckProviderFactory(): AppCheckProviderFactory = DebugAppCheckProviderFactory.getInstance()
 
@@ -26,14 +26,3 @@ internal fun seedAppCheckDebugToken(context: Context, token: String) {
             .edit().putString("com.google.firebase.appcheck.debug.DEBUG_SECRET", token).apply()
     }
 }
-
-/**
- * The debug token the SDK generated for this installation, so the owner can register it without a computer.
- * It lives in the SDK's own preferences file (name and key taken from firebase-appcheck-debug 20.0.0); null if the SDK
- * has not created one yet or a future version stores it elsewhere.
- */
-internal fun appCheckDebugToken(context: Context): String? = runCatching {
-    val persistenceKey = FirebaseApp.getInstance().persistenceKey
-    context.getSharedPreferences("com.google.firebase.appcheck.debug.store.$persistenceKey", Context.MODE_PRIVATE)
-        .getString("com.google.firebase.appcheck.debug.DEBUG_SECRET", null)
-}.getOrNull()

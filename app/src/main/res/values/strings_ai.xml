@@ -30,14 +30,7 @@
     <string name="ai_loading">Gemini sedang menganalisis…</string>
     <string name="ai_model_label">Model: %1$s</string>
     <string name="ai_done_footer">Dibuat oleh AI dari ringkasan angka. Periksa lagi sebelum mengambil keputusan.</string>
-    <string name="ai_err_denied">Layanan menolak permintaan ini. Pastikan AI Logic dan App Check sudah diatur di Firebase, lalu coba lagi.</string>
-    <string name="appcheck_show">Lihat kode pendaftaran</string>
-    <string name="appcheck_title">Kode pendaftaran perangkat</string>
-    <string name="appcheck_body">Firebase harus mengenal HP ini sebelum AI bisa dipakai. Salin kode di bawah, lalu daftarkan di Firebase console: App Check → Apps → ⋮ pada aplikasi → Manage debug tokens → Add debug token. Boleh lewat browser di HP ini.</string>
-    <string name="appcheck_secret">Kode ini rahasia. Jangan dibagikan ke orang lain.</string>
-    <string name="appcheck_missing">Kode belum tersedia. Tutup aplikasi sepenuhnya, buka lagi, lalu coba ulang.</string>
-    <string name="appcheck_copy">Salin</string>
-    <string name="appcheck_copied">Tersalin</string>
+    <string name="ai_err_denied">Analisis AI tidak bisa dipakai di perangkat ini. Coba lagi nanti, atau hubungi pemilik aplikasi.</string>
     <string name="ai_err_model">Model tidak ditemukan. Ubah nama model di pengaturan AI.</string>
     <string name="ai_err_rate">Batas pemakaian Gemini tercapai. Coba lagi beberapa menit lagi.</string>
     <string name="ai_err_server">Layanan Gemini sedang bermasalah. Coba lagi nanti.</string>

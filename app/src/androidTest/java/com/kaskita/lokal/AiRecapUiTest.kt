@@ -46,9 +46,9 @@ class AiRecapUiTest {
     private fun state(ai: AiRecapState, advice: RecapAdvice? = null) =
         ReportsUiState(month = YearMonth.of(2026, 10), advice = advice, prompt = ready, ai = ai, aiModel = "gemini-3.8-flash", isLoading = false)
 
-    private fun showCard(ai: AiRecapState, onSetup: () -> Unit = {}, onAnalyze: () -> Unit = {}, onAgain: () -> Unit = {}, onShowCode: () -> Unit = {}) {
+    private fun showCard(ai: AiRecapState, onSetup: () -> Unit = {}, onAnalyze: () -> Unit = {}, onAgain: () -> Unit = {}) {
         rule.setContent {
-            KasKitaTheme(ThemeMode.LIGHT) { AiCard(state(ai), "Oktober 2026", onSetup, onAnalyze, onAgain, onPreview = {}, onShowCode = onShowCode) }
+            KasKitaTheme(ThemeMode.LIGHT) { AiCard(state(ai), "Oktober 2026", onSetup, onAnalyze, onAgain, onPreview = {}) }
         }
     }
 
@@ -105,30 +105,6 @@ class AiRecapUiTest {
         rule.onNodeWithText(str(R.string.ai_retry)).performClick()
         assertEquals(1, analyse)
         assertTrue(rule.onAllNodesWithText(str(R.string.ai_change_settings)).fetchSemanticsNodes().isEmpty())
-    }
-
-    @Test
-    fun aDeniedRequestOffersTheDeviceCodeSoTheOwnerCanRegisterThePhone() {
-        var shown = 0
-        showCard(AiRecapState.Failed(GeminiError.DENIED), onShowCode = { shown++ })
-        rule.onNodeWithText(str(R.string.appcheck_show)).performClick()
-        assertEquals(1, shown)
-    }
-
-    @Test
-    fun theCodeDialogShowsTheCodeAndCopiesIt() {
-        var copied: String? = null
-        rule.setContent { KasKitaTheme(ThemeMode.LIGHT) { com.kaskita.lokal.ui.settings.AppCheckCodeContent("abc-123", onCopy = { copied = it }, onDismiss = {}) } }
-        rule.onNodeWithText("abc-123").assertIsDisplayed()
-        rule.onNodeWithText(str(R.string.appcheck_copy)).performClick()
-        assertEquals("abc-123", copied)
-        rule.onNodeWithText(str(R.string.appcheck_copied)).assertIsDisplayed()
-    }
-
-    @Test
-    fun theCodeDialogSaysSoWhenThereIsNoCodeYet() {
-        rule.setContent { KasKitaTheme(ThemeMode.LIGHT) { com.kaskita.lokal.ui.settings.AppCheckCodeContent(null, onCopy = {}, onDismiss = {}) } }
-        rule.onNodeWithText(str(R.string.appcheck_missing)).assertIsDisplayed()
     }
 
     @Test
